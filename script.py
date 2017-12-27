@@ -3,11 +3,20 @@
 
 import os
 import json
+import argparse
 
-outputFile = open('output.csv', 'w')
+parser = argparse.ArgumentParser(description='Extract some log info.')
+
+parser.add_argument('log_folder', help='log files location')
+parser.add_argument('-o', '--output', help='the output file', default='output.csv')
+
+args = parser.parse_args()
+
+
+outputFile = open(args.output, 'w')
 outputFile.write('URL, TIME, SIZE\n')
 
-for logFileName in os.listdir('data'):
+for logFileName in os.listdir(args.log_folder):
     print('Processing: ' + logFileName)
 
     logFileData = open('data/' + logFileName, 'r')
@@ -16,12 +25,12 @@ for logFileName in os.listdir('data'):
         line = line.split()
         try:
             if line[3] == 'FINISH':
-                parsedJson =  json.loads(line[5])
-                print(line[4], parsedJson['time'], parsedJson['size'])
+                parsedJson = {}
                 try:
-                    outputFile.write(line[4] + ', ' +  parsedJson['time'] + ', ' + parsedJson['size'] + '\n')
-                except error:
-                    print('error')
+                    parsedJson =  json.loads(line[5])
+                except:
+                    parsedJson =  json.loads(line[5] + line[6])
+                outputFile.write(line[4] + ', ' +  parsedJson['time'] + ', ' + parsedJson['size'] + '\n')
         except:
             continue
 
