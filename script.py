@@ -14,12 +14,12 @@ args = parser.parse_args()
 
 
 outputFile = open(args.output, 'w')
-outputFile.write('URL, TIME, SIZE\n')
+outputFile.write('URL,TIME,SIZE\n')
 
 for logFileName in os.listdir(args.log_folder):
     print('Processing: ' + logFileName)
 
-    logFileData = open('data/' + logFileName, 'r')
+    logFileData = open(args.log_folder + logFileName, 'r')
 
     for line in logFileData:
         line = line.split()
@@ -30,7 +30,7 @@ for logFileName in os.listdir(args.log_folder):
                     parsedJson =  json.loads(line[5])
                 except:
                     parsedJson =  json.loads(line[5] + line[6])
-                outputFile.write(line[4] + ', ' +  parsedJson['time'] + ', ' + parsedJson['size'] + '\n')
+                outputFile.write(line[4] + ',' +  parsedJson['time'] + ',' + parsedJson['size'] + '\n')
         except:
             continue
 
